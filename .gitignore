@@ -24,6 +24,8 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+*iml
+.idea*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -43,14 +45,6 @@ target/
 
 # pyenv
 .python-version
-
-# IDE
-# User-specific stuff:
-.idea\workspace.xml
-.idea\tasks.xml
-.idea\dictionaries
-.idea\vcs.xml
-.idea\jsLibraryMappings.xml
 
 # Environments
 .env
