@@ -1,6 +1,5 @@
 import numpy as np
 from math import sin, cos, sqrt
-from datapoint import DataPoint
 from filterpy.kalman import ExtendedKalmanFilter as EKF
 
 
