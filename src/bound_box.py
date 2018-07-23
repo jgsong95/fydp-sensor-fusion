@@ -1,6 +1,6 @@
 class BoundBox:
 
-    def __init__(self, timestamp, object_class, data):
-        self.timestamp = timestamp
-        self.object_class = object_class
+    def __init__(self, classifier, data):
+        self.classifier = classifier
         self.data = data
+        self.matched = False

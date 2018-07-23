@@ -16,54 +16,47 @@ from filterpy.kalman import ExtendedKalmanFilter as EKF
 #    - that will result the final fused updated state vector and process covariance matrix
 #    - computed from P (process covariance), H (extraction), R (measurement covariance)
 
-# compute H
-# def calculate_jacobian(px, py, pz, THRESH = 0.0001, ZERO_REPLACEMENT = 0.0001):
-#     """
-#       Calculates the Jacobian given for four state variables
-#       Args:
-#         px, py, pz : floats - 3 state variables
-#         THRESH - minimum value of squared distance to return a non-zero matrix
-#         ZERO_REPLACEMENT - value to replace zero to avoid division by zero error
-#       Returns:
-#         H : the jacobian matrix expressed as a 3 x 3 numpy matrix with float values
-#     """
-#
-#     d_squared = px * px + py*py + pz* pz
-#     d = sqrt(d_squared)
-#     d_cubed = d_squared * d
-#
-#     if d_squared < THRESH:
-#         H = np.matrix(np.zeros(3, 3))
-#
-#
-#     else:
-#
-#         r11 = px / d
-#         r12 = py / d
-#         r13 = py / d
-#
-#         r21 = -py / d_squared
-#         r22 = px / d_squared
-#         r23 =
-#
-#         r31 = py * (vx * py - vy * px) / d_cubed
-#         r32 = px * (vy * px - vx * py) / d_cubed
-#         r33 = pz * ()
-#
-#         H = np.matrix([[r11, r12, 0, 0],
-#                        [r21, r22, 0, 0],
-#                        [r31, r32, r11, r12]])
-#
-#     return H
+class FusionEKF:
 
-class FusionEKF(EKF):
 
-    def __init__(self, dt):
-        EKF.__init__(self, 3, 3)
-        self.dt = dt
 
-    def predict(self):
+    def __init__(self):
+        self.dt = 0.5
+        self.proccess_error = 0.05
+        self.ekf = EKF(3, 3)
+        self.ekf.Q = np.array([[0, 0, 0],
+                               [0, 0, 0],
+                               [0, 0, 0]])
+
+
+    def run(self, data):
+
+        true_position = []
+
+        for i in range(int(20/self.dt)):
+            z = data
+
+            self.ekf.update(np.asarray([z.lidar.data]), self.H_of, self.hx, R=self.hx(self.ekf.x)*self.proccess_error)
+            self.ekf.predict()
+
+            self.ekf.update(np.asarray([z.camera.data]), self.H_of, self.hx, R=self.hx(self.ekf.x)*self.proccess_error)
+            self.ekf.predict()
+
+            true_position.append(self.ekf.x)
+
+    def H_of(self, x):
         return 0
 
-    def update(self):
+
+    def hx(self, x):
         return 0
+
+
+    def fx(self, x):
+        return np.dot(self.efk.F, x)
+
+
+
+
+    # Set intial guess to first data input, camera or lidar
+
